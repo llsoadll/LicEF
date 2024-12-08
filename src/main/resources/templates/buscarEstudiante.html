@@ -34,8 +34,11 @@
         /* Enhanced navigation bar styles */
         .nav-bar {
             background-color: var(--secondary-color);
-            padding: 0.6rem 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-links {
@@ -177,29 +180,23 @@
         @media screen and (max-width: 768px) {
             .nav-bar {
                 flex-direction: column;
-                padding: 1rem;
             }
 
             .nav-links {
                 flex-direction: column;
                 width: 100%;
+                text-align: center;
             }
 
             .nav-links a {
                 width: 100%;
-                text-align: center;
-                padding: 0.8rem 0;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }
-
-            .nav-links a:last-child {
-                border-bottom: none;
+                padding: 0.5rem 0;
             }
 
             .logout-form {
+                margin-top: 1rem;
                 width: 100%;
                 text-align: center;
-                margin-top: 1rem;
             }
 
             /* Ajustar espaciado para móviles */

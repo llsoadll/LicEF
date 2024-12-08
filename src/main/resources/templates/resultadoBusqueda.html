@@ -407,6 +407,47 @@
         .btn-secondary:hover {
             background-color: var(--hover-color);
         }
+
+        /* Estilos base para nav-bar */
+        .nav-bar {
+            background-color: var(--secondary-color);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Contenedor de links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Media query para móviles */
+        @media screen and (max-width: 768px) {
+            .nav-bar {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links a {
+                width: 100%;
+                padding: 0.5rem 0;
+            }
+
+            .logout-form {
+                margin-top: 1rem;
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
        <script src="https://cdn.tiny.cloud/1/tf451wnpk7eed3iqvmrbllpr251j9v5tvmr1b18khhzyxsma/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 

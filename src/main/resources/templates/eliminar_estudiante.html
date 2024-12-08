@@ -39,12 +39,15 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             width: 100%;
             box-sizing: border-box;
+            padding: 1rem;
+            flex-wrap: wrap;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
             gap: 2rem;
+            gap: 1rem;
         }
 
         .nav-links a {
@@ -173,6 +176,35 @@
             text-align: center;
             padding: 1rem;
             margin-top: auto;
+        }
+
+        /* Media queries for mobile */
+        @media screen and (max-width: 768px) {
+            .nav-bar {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links a {
+                width: 100%;
+                padding: 0.5rem 0;
+            }
+
+            .logout-form {
+                margin-top: 1rem;
+                width: 100%;
+                text-align: center;
+            }
+
+            /* Adjust spacing for mobile */
+            .container {
+                padding: 1rem;
+            }
         }
     </style>
     <script>

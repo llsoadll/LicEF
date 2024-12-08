@@ -41,12 +41,13 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             width: 100%;
             box-sizing: border-box;
+            flex-wrap: wrap;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 1rem;
         }
 
         .nav-links a {
@@ -489,6 +490,30 @@
 
         div[style="text-align: center;"] {
             margin: 20px 0;
+        }
+
+        /* Media query para móviles */
+        @media screen and (max-width: 768px) {
+            .nav-bar {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links a {
+                width: 100%;
+                padding: 0.5rem 0;
+            }
+
+            .logout-form {
+                margin-top: 1rem;
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
    <script src="https://cdn.tiny.cloud/1/tf451wnpk7eed3iqvmrbllpr251j9v5tvmr1b18khhzyxsma/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>

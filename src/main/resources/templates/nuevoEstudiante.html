@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Estudiante</title>
+    <style>
+        :root {
+            --primary-color: #2d6a4f;
+            --secondary-color: #40916c;
+            --hover-color: #52b788;
+            --background-color: #f1f8f2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin: 0;
+            padding: 20px;
+        }
+
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .checkbox-group {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        legend {
+            color: var(--primary-color);
+            font-weight: bold;
+            padding: 0 10px;
+        }
+
+        .checkbox-item {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .checkbox-item label {
+            display: inline;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .volver-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .volver-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        /* Enhanced navigation bar styles */
+        .nav-bar {
+            background-color: var(--secondary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Admin section styling */
+        .nav-links div[sec\:authorize="hasRole('ROLE_ADMIN')"] {
+            display: flex;
+            gap: 1.5rem;
+            margin-left: 2rem;
+            padding-left: 2rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Specific styles for logout form to override general form styles */
+        .logout-form {
+            margin-left: auto;
+            background-color: transparent;
+            padding: 0;
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        /* Specific styles for logout button */
+        .logout-form .btn-secondary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: bold;
+            height: auto;
+            line-height: normal;
+        }
+
+        .logout-form .btn-secondary:hover {
+            background-color: var(--hover-color);
+        }
+
+        .checkbox-group {
+            margin: 10px 0;
+        }
+
+        .checkbox-item {
+            margin: 5px 0;
+        }
+
+        .estado-tramite {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .estado-tramite li {
+            margin: 3px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Registrar Nuevo Estudiante</h1>
+    </header>
+
+    <!-- Barra de navegación -->
+    <nav class="nav-bar">
+        
+        <div class="nav-links">
+            <a href="/estudiantes/buscar/formulario">Buscar Estudiante</a>
+            <a href="/estudiantes/lista">Lista de Estudiantes</a>
+            <a href="/estudiantes/eliminar_estudiante">Eliminar Estudiante</a>
+        </div>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit" class="btn-secondary">Cerrar Sesión</button>
+        </form>
+    </nav>
+
+    <main>
+        <form action="/estudiantes/guardar" method="post">
+            <div class="form-group">
+                <label for="nombre">Nombre y apellido:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="anioIngreso">Año de Ingreso:</label>
+                <input type="number" id="anioIngreso" name="anioIngreso" required>
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo:</label>
+                <input type="correo" id="correo" name="correo" required>
+            </div>
+            <div class="form-group">
+                <label for="dni">DNI:</label>
+                <input type="text" id="dni" name="dni">
+            </div>
+            <div class="form-group">
+                <label for="legajo">Legajo:</label>
+                <input type="text" id="legajo" name="legajo">
+            </div>
+            
+            
+
+            <div class="form-group">
+                <label for="tituloTFL">Título del TFL:</label>
+                <input type="text" id="tituloTFL" name="tituloTFL">
+            </div>
+            <div class="form-group">
+                <label for="tutor">Tutor:</label>
+                <input type="text" id="tutor" name="tutor">
+            </div>
+            <div class="form-group">
+                <label for="cotutor">Cotutor:</label>
+                <input type="text" id="cotutor" name="cotutor">
+            </div>
+ <!-- Replace the existing nota inputs with these -->
+<div class="form-group">
+    <label for="notaEvaluador1">Nota Evaluador 1:</label>
+    <input type="number" 
+           id="notaEvaluador1" 
+           name="notaEvaluador1" 
+           min="0" 
+           max="10" 
+           step="0.01" 
+           value="0"
+           placeholder="0.00">
+</div>
+
+<div class="form-group">
+    <label for="notaEvaluador2">Nota Evaluador 2:</label>
+    <input type="number" 
+           id="notaEvaluador2" 
+           name="notaEvaluador2" 
+           min="0" 
+           max="10" 
+           step="0.01" 
+           value="0"
+           placeholder="0.00">
+</div>
+
+<div class="form-group">
+    <label for="notaTutor">Nota Tutor:</label>
+    <input type="number" 
+           id="notaTutor" 
+           name="notaTutor" 
+           min="0" 
+           max="10" 
+           step="0.01" 
+           value="0"
+           placeholder="0.00">
+</div>
+            <div class="form-group">
+                <label for="evaluadores">Evaluadores:</label>
+                <textarea id="evaluadores" name="evaluadores"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="fechaEnvioEvaluar">Fecha de Envío a Evaluar:</label>
+                <input type="date" id="fechaEnvioEvaluar" name="fechaEnvioEvaluar">
+            </div>
+            <div class="form-group">
+                <label for="observaciones">Observaciones:</label>
+                <textarea id="observaciones" name="observaciones"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="notasAdicionales">Notas Adicionales:</label>
+                <textarea id="notasAdicionales" 
+                          name="notasAdicionales" 
+                          rows="10" 
+                          style="width: 100%; 
+                                 padding: 10px; 
+                                 margin-bottom: 20px; 
+                                 border: 1px solid #ddd; 
+                                 border-radius: 4px; 
+                                 resize: vertical;">
+                </textarea>
+            </div>
+
+            <div class="checkbox-group">
+              <fieldset>
+                  <legend>Estado del Trámite</legend>
+                  
+                  <div class="checkbox-item">
+                      <input type="checkbox" id="solicitudTutor" name="solicitudTutor">
+                      <label for="solicitudTutor">Solicitud de Tutor</label>
+                  </div>
+
+                  <div class="checkbox-item">
+                      <input type="checkbox" id="consentimientoTutor" name="consentimientoTutor">
+                      <label for="consentimientoTutor">Consentimiento de Tutor</label>
+                  </div>
+
+                  <div class="checkbox-item">
+                      <input type="checkbox" id="espaciosCurriculares" name="espaciosCurriculares">
+                      <label for="espaciosCurriculares">Espacios Curriculares</label>
+                  </div>
+
+                  <div class="checkbox-item">
+                      <input type="checkbox" id="informeTutor" name="informeTutor">
+                      <label for="informeTutor">Informe del Tutor</label>
+                  </div>
+
+                  <div class="checkbox-item">
+                      <input type="checkbox" id="practicasProfesionales" name="practicasProfesionales">
+                      <label for="practicasProfesionales">Prácticas Profesionales</label>
+                  </div>
+
+                  <div class="checkbox-item">
+                      <input type="checkbox" id="proyecto" name="proyecto">
+                      <label for="proyecto">Proyecto</label>
+                  </div>
+
+                  <div class="checkbox-item">
+                      <input type="checkbox" id="tfl" name="tfl">
+                      <label for="tfl">TFL</label>
+                  </div>
+
+                  <div class="checkbox-item">
+                      <input type="checkbox" id="graduado" name="graduado">
+                      <label for="graduado">Graduado</label>
+                  </div>
+              </fieldset>
+          </div>
+
+<div class="form-group">
+    <label>Acciones:</label>
+    <div class="checkbox-group">
+        <div class="checkbox-item">
+            <input type="checkbox" id="secretariaRedaccion" name="pasarSecretariaRedaccion">
+            <label for="secretariaRedaccion">Pasar por Secretaría de Redacción</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="jad" name="pasarJAD">
+            <label for="jad">Pasar por JAD</label>
+        </div>
+    </div>
+</div>
+
+            <button type="submit">Guardar</button>
+        </form>
+        <div style="text-align: center;">
+            <a href="/" class="volver-btn">Volver al Inicio</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Pablo Sanchez</p>
+    </footer>
+    <!-- Add this JavaScript right before the closing </body> tag -->
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    // Get all number inputs for notes
+    const notaInputs = ['notaEvaluador1', 'notaEvaluador2', 'notaTutor'];
+    
+    notaInputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        // If empty or invalid, set to 0
+        if (!input.value || input.value === '') {
+            input.value = '0';
+        }
+    });
+});
+</script>
+</body>
+</html>

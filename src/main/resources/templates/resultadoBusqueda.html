@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado de la Búsqueda</title>
+    <style>
+        :root {
+            --primary-color: #2d6a4f;
+            --secondary-color: #40916c;
+            --hover-color: #52b788;
+            --background-color: #f1f8f2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        /* Enhanced navigation bar styles */
+        .nav-bar {
+            background-color: var(--secondary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Admin section styling */
+        .nav-links div[sec\:authorize="hasRole('ROLE_ADMIN')"] {
+            display: flex;
+            gap: 1.5rem;
+            margin-left: 2rem;
+            padding-left: 2rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        table {
+            min-width: 800px;
+            width: 100%;
+            font-size: 0.9rem;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border-spacing: 0;
+            border: 1px solid var(--primary-color);
+        }
+
+        th, td {
+            padding: 8px 12px;
+            max-width: 200px;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(236, 240, 241, 0.5);
+        }
+
+        tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .volver-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .volver-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        td ul {
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 5px;
+            border-left: 2px solid var(--secondary-color);
+            padding-left: 10px;
+        }
+
+        td ul li {
+            font-size: 0.85rem;
+            padding: 2px 0;
+            border-bottom: 1px solid #eee;
+            padding: 4px 0;
+        }
+
+        td ul li:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 6px 8px;
+            }
+        }
+
+
+        /* Estilos para el botón de cerrar */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 3px;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+            margin: 2px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .graduado-row {
+            background-color: #90EE90 !important; /* Verde claro */
+        }
+
+        .secretaria-row {
+         background-color: #fce18b !important; /* Color amarillo claro */
+        }
+
+        .jad-row {
+        background-color: #7f7fdd !important; /* Color violeta claro */
+        }
+
+        .table-container {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 4px;
+            margin: 20px;
+        }
+
+        .volver-btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .volver-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .actions-column {
+            text-align: center !important;
+            width: 100px !important;
+            vertical-align: middle !important;
+        }
+        
+        .btn-primary {
+            display: inline-block !important;
+            width: auto !important;
+            min-width: 60px !important;
+            padding: 5px 10px !important;
+            margin: 2px !important;
+            background-color: var(--secondary-color) !important;
+            color: white !important;
+            text-decoration: none !important;
+            border-radius: 3px !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* Eliminar cualquier estilo que pueda estar ocultando los botones */
+        tr td:last-child {
+            visibility: visible !important;
+            display: table-cell !important;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .nota-column {
+            width: 60px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .nota-column {
+                width: 40px;
+            }
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-content {
+            overflow-y: auto;
+            max-height: 60vh;
+            padding-right: 10px;
+        }
+
+        .modal-footer {
+            text-align: right;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .formatted-content {
+            padding: 15px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .formatted-content p {
+            margin-bottom: 1em;
+        }
+
+        .tox-content {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        .tox-content ul, .tox-content ol {
+            margin-left: 20px;
+            margin-bottom: 1em;
+        }
+
+        .tox-content img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .logout-form {
+            margin-left: auto;
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--hover-color);
+        }
+    </style>
+       <script src="https://cdn.tiny.cloud/1/tf451wnpk7eed3iqvmrbllpr251j9v5tvmr1b18khhzyxsma/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+</head>
+
+
+
+<body>
+    <header>
+        <h1>Resultado de la Búsqueda</h1>
+    </header>
+      <!-- Barra de navegación -->
+<nav class="nav-bar">
+    <div class="nav-links">
+        <!-- Links visible para todos los usuarios -->
+        <a href="/estudiantes/buscar/formulario">Buscar Estudiante</a>
+        <a href="/estudiantes/lista">Lista de Estudiantes</a>
+        
+        <!-- Links solo visibles para administradores -->
+        <div sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/estudiantes/nuevo">Nuevo Estudiante</a>
+            <a href="/estudiantes/eliminar_estudiante">Eliminar Estudiante</a>
+        </div>
+    </div>
+    <form th:action="@{/logout}" method="post" class="logout-form">
+        <button type="submit" class="btn-secondary">Cerrar Sesión</button>
+    </form>
+</nav>
+
+
+
+    <!-- Mensaje de error si existe -->
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+    <!-- Resultados de la búsqueda -->
+    <div th:if="${estudiantes != null && !#lists.isEmpty(estudiantes)}" class="table-container">
+        <h2>Estudiantes encontrados: <span th:text="${#lists.size(estudiantes)}"></span></h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Año de Ingreso</th>
+                    <th>Correo</th>
+                    <th>DNI</th>
+                    <th>Legajo</th>
+                    <th>Título TFL</th>
+                    <th>Tutor</th>
+                    <th>Cotutor</th>
+                    <th class="nota-column">Nota E1</th>
+                    <th class="nota-column">Nota E2</th>
+                    <th class="nota-column">Nota T</th>
+                    <th>Evaluadores</th>
+                    <th>Fecha Envío</th>
+                    <th>Observaciones</th>
+                    <th>Estado del Trámite</th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')">Acciones</th>
+                    <th>Notas</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr th:each="estudiante : ${estudiantes}" 
+              th:class="${estudiante.graduado ? 'graduado-row' : 
+              (estudiante.pasarSecretariaRedaccion ? 'secretaria-row' : 
+              (estudiante.pasarJAD ? 'jad-row' : ''))}">
+                    <td th:text="${estudiante.id}"></td>
+                    <td th:text="${estudiante.nombre}"></td>
+                    <td th:text="${estudiante.anioIngreso}"></td> 
+                    <td th:text="${estudiante.correo}"></td>
+                    <td th:text="${estudiante.dni}"></td>
+                    <td th:text="${estudiante.legajo}"></td>
+                    <td th:text="${estudiante.tituloTFL}"></td>
+                    <td th:text="${estudiante.tutor}"></td>
+                    <td th:text="${estudiante.cotutor}"></td>
+                    <td class="nota-column" th:text="${estudiante.notaEvaluador1}"></td>
+                    <td class="nota-column" th:text="${estudiante.notaEvaluador2}"></td>
+                    <td class="nota-column" th:text="${estudiante.notaTutor}"></td>
+                    <td th:text="${estudiante.evaluadores}"></td>
+                    <td th:text="${estudiante.fechaEnvioEvaluar}"></td>
+                    <td class="texto-largo" th:text="${estudiante.observaciones}"></td>
+                    <td>
+                        <ul>
+                            <li th:text="${estudiante.solicitudTutor ? 'Solicitud de Tutor: Enviado' : 'Solicitud de Tutor: No Enviado'}"></li>
+                            <li th:text="${estudiante.consentimientoTutor ? 'Consentimiento de Tutor: Enviado' : 'Consentimiento de Tutor: No Enviado'}"></li>
+                            <li th:text="${estudiante.espaciosCurriculares ? 'Espacios Curriculares: Enviado' : 'Espacios Curriculares: No Enviado'}"></li>
+                            <li th:text="${estudiante.informeTutor ? 'Informe Tutor: Enviado' : 'Informe Tutor: No Enviado'}"></li>
+                            <li th:text="${estudiante.practicasProfesionales ? 'Prácticas Profesionales: Enviado' : 'Prácticas Profesionales: No Enviado'}"></li>
+                            <li th:text="${estudiante.proyecto ? 'Proyecto: Enviado' : 'Proyecto: No Enviado'}"></li>
+                            <li th:text="${estudiante.tfl ? 'TFL: Enviado' : 'TFL: No Enviado'}"></li>
+                            <li th:text="${estudiante.graduado ? 'Estado: Graduado' : 'Estado: No Graduado'}"></li>
+                        </ul>
+                        <ul class="estado-tramite">
+                            <li>
+                                <span th:text="${estudiante.pasarSecretariaRedaccion ? 'Secretaría de Redacción: ✓' : 'Secretaría de Redacción: ✗'}"></span>
+                            </li>
+                            <li>
+                                <span th:text="${estudiante.pasarJAD ? 'JAD: ✓' : 'JAD: ✗'}"></span>
+                            </li>
+                        </ul>
+                    </td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a th:href="@{/estudiantes/editar/{id}(id=${estudiante.id})}" class="btn-primary">Editar</a>
+                    </td>
+                    <td>
+                        <button class="btn-primary" 
+                                onclick="mostrarNotas(this)" 
+                                th:data-notas="${estudiante.notasAdicionales}">
+                            Ver Notas
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mensaje cuando no hay resultados -->
+    <div th:if="${estudiantes == null || #lists.isEmpty(estudiantes)}" class="no-results">
+        <h2>No se encontraron estudiantes con ese nombre.</h2>
+    </div>
+
+    <!-- Botón Volver siempre visible -->
+    <div class="button-container">
+        <a href="/estudiantes/buscar/formulario" class="volver-btn">Volver a Buscar</a>
+    </div>
+
+    <div id="modalNotas" class="modal-overlay">
+        <div class="modal">
+            <h3>Notas Adicionales</h3>
+            <div class="modal-content">
+                <div id="contenidoNotas" class="formatted-content tox-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="cerrarModal()" class="btn-primary">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function mostrarNotas(boton) {
+        const notas = boton.getAttribute('data-notas');
+        document.getElementById('contenidoNotas').textContent = notas;
+        document.getElementById('modalNotas').style.display = 'flex';
+    }
+
+    function cerrarModal() {
+        document.getElementById('modalNotas').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('modalNotas');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+    </script>
+</body>
+</html>

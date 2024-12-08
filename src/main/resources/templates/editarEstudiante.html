@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Estudiante</title>
+    <style>
+        :root {
+            --primary-color: #2d6a4f;
+            --secondary-color: #40916c;
+            --hover-color: #52b788;
+            --background-color: #f1f8f2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .form-container {
+            width: 90%; /* Ajuste para dispositivos móviles */
+            max-width: 800px; /* Ancho máximo para pantallas grandes */
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            font-weight: bold; /* Etiquetas en negrita */
+            white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%; /* Campos más anchos */
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .estado-tramite {
+            background-color: var(--checkbox-background); /* Fondo gris */
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .estado-tramite h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .checkbox-grid {
+            display: flex;
+            flex-direction: column; /* Un checkbox por renglón */
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .checkbox-item label {
+            font-weight: bold; /* Etiquetas en negrita */
+            white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        /* Media queries para responsividad */
+        @media (min-width: 768px) {
+            .form-container {
+                width: 80%;
+            }
+            .checkbox-item {
+                width: calc(33.333% - 1rem); /* Tres columnas en pantallas medianas */
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .form-container {
+                width: 60%;
+            }
+            .checkbox-item {
+                width: calc(25% - 1rem); /* Cuatro columnas en pantallas grandes */
+            }
+        }
+
+        /* Estilos para la sección "Estado del Trámite" */
+        .estado-tramite {
+            margin-top: 2rem;
+        }
+
+        .estado-tramite h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .fila-graduado {
+            background-color: #90EE90; /* Color verde claro */
+            transition: background-color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Editar Estudiante</h1>
+    </header>
+
+    <div class="form-container">
+        <form th:action="@{/estudiantes/editar/{id}(id=${estudiante.id})}" th:object="${estudiante}" method="post">
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" th:field="*{nombre}"required />
+            </div>
+
+            <div class="form-group">
+                <label>DNI:</label>
+                <input type="text" th:field="*{dni}">
+            </div>
+
+            <div class="form-group">
+                <label>Legajo:</label>
+                <input type="text" th:field="*{legajo}">
+            </div>
+
+            <div class="form-group">
+                <label>Correo:</label>
+                <input type="email" th:field="*{correo}">
+            </div>
+
+            <div class="form-group">
+                <label>Año de Ingreso:</label>
+                <input type="number" th:field="*{anioIngreso}">
+            </div>
+
+            <div class="form-group">
+                <label>Título TFL:</label>
+                <input type="text" th:field="*{tituloTFL}" />
+            </div>
+
+            <div class="form-group">
+                <label>Tutor:</label>
+                <input type="text" th:field="*{tutor}" />
+            </div>
+
+            <div class="form-group">
+                <label>Cotutor:</label>
+                <input type="text" th:field="*{cotutor}" />
+            </div>
+            
+            <!-- Reemplazar los campos de notas existentes con estos -->
+<div class="form-group">
+    <label>Nota Evaluador 1:</label>
+    <input type="number" 
+           th:field="*{notaEvaluador1}" 
+           min="0" 
+           max="10" 
+           step="0.01" 
+           value="0"
+           placeholder="0.00" />
+</div>
+
+<div class="form-group">
+    <label>Nota Evaluador 2:</label>
+    <input type="number" 
+           th:field="*{notaEvaluador2}" 
+           min="0" 
+           max="10" 
+           step="0.01" 
+           value="0"
+           placeholder="0.00" />
+</div>
+
+<div class="form-group">
+    <label>Nota Tutor:</label>
+    <input type="number" 
+           th:field="*{notaTutor}" 
+           min="0" 
+           max="10" 
+           step="0.01" 
+           value="0"
+           placeholder="0.00" />
+</div>
+
+            <div class="form-group">
+                <label>Evaluadores:</label>
+                <input type="text" th:field="*{evaluadores}" />
+            </div>
+
+            <div class="form-group">
+                <label>Fecha de Envío a Evaluar:</label>
+                <input type="date" th:field="*{fechaEnvioEvaluar}" />
+            </div>
+
+            <div class="form-group">
+                <label>Observaciones:</label>
+                <textarea th:field="*{observaciones}" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="notasAdicionales">Notas Adicionales:</label>
+                <textarea th:field="*{notasAdicionales}" 
+                          rows="10" 
+                          style="width: 100%; 
+                                 padding: 10px; 
+                                 margin-bottom: 20px; 
+                                 border: 1px solid #ddd; 
+                                 border-radius: 4px; 
+                                 resize: vertical;">
+                </textarea>
+            </div>
+
+            <!-- Grupo de checkboxes -->
+            <div class="estado-tramite">
+                <h2>Estado del Trámite</h2>
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{solicitudTutor}" id="solicitudTutor"/>
+                        <label for="solicitudTutor">Solicitud de Tutor</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{consentimientoTutor}" id="consentimientoTutor"/>
+                        <label for="consentimientoTutor">Consentimiento de Tutor</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{espaciosCurriculares}" id="espaciosCurriculares"/>
+                        <label for="espaciosCurriculares">Espacios Curriculares</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{informeTutor}" id="informeTutor"/>
+                        <label for="informeTutor">Informe Tutor</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{practicasProfesionales}" id="practicasProfesionales"/>
+                        <label for="practicasProfesionales">Prácticas Profesionales</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{proyecto}" id="proyecto"/>
+                        <label for="proyecto">Proyecto</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{tfl}" id="tfl"/>
+                        <label for="tfl">TFL</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{graduado}" id="graduado"/>
+                        <label for="graduado">Graduado</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Acciones:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{pasarSecretariaRedaccion}" id="secretariaRedaccion">
+                        <label for="secretariaRedaccion">Pasar por Secretaría de Redacción</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" th:field="*{pasarJAD}" id="jad">
+                        <label for="jad">Pasar por JAD</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" class="btn-primary">Guardar Cambios</button>
+                <a th:href="@{/estudiantes/lista}" class="btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <p>© 2024 Pablo Sanchez</p>
+    </footer>
+
+    <!-- Agregar este script antes del cierre de </body> -->
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const campos = ['notaEvaluador1', 'notaEvaluador2', 'notaTutor'];
+    
+    campos.forEach(campo => {
+        const input = document.querySelector(`input[name="${campo}"]`);
+        if (!input.value || input.value === '') {
+            input.value = '0';
+        }
+    });
+});
+</script>
+</body>
+</html>

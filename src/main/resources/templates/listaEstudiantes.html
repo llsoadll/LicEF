@@ -493,22 +493,74 @@
         }
 
         .filter-container {
-            margin-bottom: 20px;
-        }
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
 
-        .filter-container select,
-        .filter-container label {
-            margin-right: 15px;
-        }
+.filter-container select {
+    padding: 8px 12px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 6px;
+    background-color: white;
+    color: var(--primary-color);
+    font-size: 0.95rem;
+    min-width: 200px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+}
 
-        .filter-container label {
-            display: inline-flex;
-            align-items: center;
-        }
+.filter-container select:hover,
+.filter-container select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(45, 106, 79, 0.1);
+}
 
-        .filter-container input[type="checkbox"] {
-            margin-right: 5px;
-        }
+.filter-container label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.filter-container label:hover {
+    background-color: rgba(45, 106, 79, 0.1);
+}
+
+.filter-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .filter-container select {
+        width: 100%;
+    }
+
+    .filter-container label {
+        padding: 12px;
+    }
+}
     </style>
    <script src="https://cdn.tiny.cloud/1/tf451wnpk7eed3iqvmrbllpr251j9v5tvmr1b18khhzyxsma/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>

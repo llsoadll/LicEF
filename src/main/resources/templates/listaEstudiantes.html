@@ -508,32 +508,6 @@
         .filter-container input[type="checkbox"] {
             margin-right: 5px;
         }
-
-        /* Add to existing styles */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-        }
     </style>
    <script src="https://cdn.tiny.cloud/1/tf451wnpk7eed3iqvmrbllpr251j9v5tvmr1b18khhzyxsma/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
@@ -545,21 +519,19 @@
 
     <!-- Barra de navegación -->
     <nav class="nav-bar">
-        <button class="menu-toggle" id="menuToggle">☰</button>
-        <div class="nav-links" id="navLinks">
-            <!-- Existing links -->
+        <div class="nav-links">
+            <!-- Links visible para todos los usuarios -->
             <a href="/estudiantes/buscar/formulario">Buscar Estudiante</a>
             
-            <!-- Admin links -->
+            <!-- Links solo visibles para administradores -->
             <div sec:authorize="hasRole('ROLE_ADMIN')">
                 <a href="/estudiantes/nuevo">Nuevo Estudiante</a>
                 <a href="/estudiantes/eliminar_estudiante">Eliminar Estudiante</a>
             </div>
-            
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit" class="btn-secondary">Cerrar Sesión</button>
-            </form>
         </div>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit" class="btn-secondary">Cerrar Sesión</button>
+        </form>
     </nav>
 
     <main>
@@ -788,14 +760,10 @@
             aplicarFiltros();
         });
     </script>
-    <script>
-document.getElementById('menuToggle').addEventListener('click', function() {
-    document.getElementById('navLinks').classList.toggle('active');
-});
-</script>
 
     <footer>
         <p>© 2024 Pablo Sanchez</p>
     </footer>
 </body>
 </html>
+

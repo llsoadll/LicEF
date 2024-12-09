@@ -41,13 +41,12 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             width: 100%;
             box-sizing: border-box;
-            flex-wrap: wrap;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 2rem;
         }
 
         .nav-links a {
@@ -492,28 +491,22 @@
             margin: 20px 0;
         }
 
-        /* Media query para móviles */
-        @media screen and (max-width: 768px) {
-            .nav-bar {
-                flex-direction: column;
-            }
+        .filter-container {
+            margin-bottom: 20px;
+        }
 
-            .nav-links {
-                flex-direction: column;
-                width: 100%;
-                text-align: center;
-            }
+        .filter-container select,
+        .filter-container label {
+            margin-right: 15px;
+        }
 
-            .nav-links a {
-                width: 100%;
-                padding: 0.5rem 0;
-            }
+        .filter-container label {
+            display: inline-flex;
+            align-items: center;
+        }
 
-            .logout-form {
-                margin-top: 1rem;
-                width: 100%;
-                text-align: center;
-            }
+        .filter-container input[type="checkbox"] {
+            margin-right: 5px;
         }
     </style>
    <script src="https://cdn.tiny.cloud/1/tf451wnpk7eed3iqvmrbllpr251j9v5tvmr1b18khhzyxsma/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
@@ -542,6 +535,28 @@
     </nav>
 
     <main>
+        <div class="filter-container">
+            <select id="ordenamiento">
+                <option value="asc">Orden Alfabético A-Z</option>
+                <option value="desc">Orden Alfabético Z-A</option>
+            </select>
+
+            <select id="graduado">
+                <option value="todos">Todos</option>
+                <option value="graduado">Graduados</option>
+                <option value="no-graduado">No Graduados</option>
+            </select>
+
+            <label>
+                <input type="checkbox" id="secretaria">
+                Pasar por Secretaría de Redacción
+            </label>
+
+            <label>
+                <input type="checkbox" id="jad">
+                Pasar por JAD
+            </label>
+        </div>
         <div class="table-container">
             <table>
                 <thead>
@@ -567,10 +582,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="estudiante : ${estudiantes}" 
+                    <tr th:each="estudiante : ${estudiantes}"
+    th:data-nombre="${estudiante.nombre}"
+    th:data-graduado="${estudiante.graduado}"
+    th:data-secretaria="${estudiante.pasarSecretariaRedaccion}"
+    th:data-jad="${estudiante.pasarJAD}"
     th:class="${estudiante.graduado ? 'graduado-row' : 
               (estudiante.pasarSecretariaRedaccion ? 'secretaria-row' : 
-              (estudiante.pasarJAD ? 'jad-row' : ''))}">
+              (estudiante.pasarJAD ? 'jad-row' : '') )}">
                         <td th:text="${estudiante.id}"></td>
                         <td th:text="${estudiante.nombre}"></td>
                         <td th:text="${estudiante.anioIngreso}"></td>
@@ -672,6 +691,74 @@
                 modal.style.display = 'none';
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const filas = document.querySelectorAll('table tbody tr');
+
+            function aplicarFiltros() {
+                const ordenamiento = document.getElementById('ordenamiento').value;
+                const graduado = document.getElementById('graduado').value;
+                const necesitaSecretaria = document.getElementById('secretaria').checked;
+                const necesitaJad = document.getElementById('jad').checked;
+
+                let filasArray = Array.from(filas);
+
+                // Filtrar las filas
+                filasArray.forEach(fila => {
+                    let mostrar = true;
+
+                    const estudianteNombre = fila.dataset.nombre.toLowerCase();
+                    const estudianteGraduado = fila.dataset.graduado === 'true';
+                    const estudianteSecretaria = fila.dataset.secretaria === 'true';
+                    const estudianteJad = fila.dataset.jad === 'true';
+
+                    // Filtrar por graduado
+                    if (graduado === 'graduado' && !estudianteGraduado) {
+                        mostrar = false;
+                    } else if (graduado === 'no-graduado' && estudianteGraduado) {
+                        mostrar = false;
+                    }
+
+                    // Filtrar por Secretaría de Redacción
+                    if (necesitaSecretaria && !estudianteSecretaria) {
+                        mostrar = false;
+                    }
+
+                    // Filtrar por JAD
+                    if (necesitaJad && !estudianteJad) {
+                        mostrar = false;
+                    }
+
+                    fila.style.display = mostrar ? '' : 'none';
+                });
+
+                // Ordenar las filas
+                filasArray = filasArray.filter(fila => fila.style.display !== 'none');
+
+                filasArray.sort((a, b) => {
+                    const nombreA = a.dataset.nombre.toLowerCase();
+                    const nombreB = b.dataset.nombre.toLowerCase();
+
+                    if (ordenamiento === 'asc') {
+                        return nombreA.localeCompare(nombreB);
+                    } else {
+                        return nombreB.localeCompare(nombreA);
+                    }
+                });
+
+                const tbody = document.querySelector('table tbody');
+                filasArray.forEach(fila => tbody.appendChild(fila));
+            }
+
+            // Añadir eventos a los controles de filtro
+            document.getElementById('ordenamiento').addEventListener('change', aplicarFiltros);
+            document.getElementById('graduado').addEventListener('change', aplicarFiltros);
+            document.getElementById('secretaria').addEventListener('change', aplicarFiltros);
+            document.getElementById('jad').addEventListener('change', aplicarFiltros);
+
+            // Aplicar filtros inicialmente
+            aplicarFiltros();
+        });
     </script>
 
     <footer>
@@ -679,3 +766,4 @@
     </footer>
 </body>
 </html>
+

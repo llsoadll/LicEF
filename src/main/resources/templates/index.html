@@ -272,6 +272,46 @@
                 min-height: 80px;
             }
         }
+
+
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    width: 70%;
+    border-radius: 8px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.nota-textarea {
+    width: 100%;
+    min-height: 300px;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+
+
+          
     </style>
 </head>
 <body>
@@ -305,11 +345,60 @@
             <a sec:authorize="hasRole('ROLE_ADMIN')" href="/estudiantes/eliminar_estudiante" class="menu-item">
                 <span>Eliminar Estudiante</span>
             </a>
+
+              <a href="#" onclick="abrirModal()" class="menu-item">
+               <span>Listado de Estudiantes Seminario Prácticas</span>
+              </a>
+              
         </div>
     </main>
 
     <footer>
         <p>© 2024 Pablo Sanchez</p>
     </footer>
+
+
+      <div id="notasModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModal()">&times;</span>
+        <h2>Notas de Estudiantes - Seminario Prácticas</h2>
+        <textarea id="notasTexto" class="nota-textarea"></textarea>
+        <button onclick="guardarNota()" class="btn-guardar">Guardar</button>
+    </div>
+</div>
+
+
+<script>
+function abrirModal() {
+    document.getElementById('notasModal').style.display = 'block';
+    cargarNotas();
+}
+
+function cerrarModal() {
+    document.getElementById('notasModal').style.display = 'none';
+}
+
+function cargarNotas() {
+    fetch('/estudiantes/cargar-nota')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('notasTexto').value = data;
+        });
+}
+
+function guardarNota() {
+    const contenido = document.getElementById('notasTexto').value;
+    fetch('/estudiantes/guardar-nota', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'contenido=' + encodeURIComponent(contenido)
+    })
+    .then(() => alert('Notas guardadas correctamente'));
+}
+</script>
+      
+      
 </body>
 </html>

@@ -283,23 +283,40 @@
     height: 100%;
     background-color: rgba(0,0,0,0.5);
     z-index: 1000;
+    
+    /* Agregar flexbox para centrado */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
     background-color: white;
-    margin: 15% auto;
-    padding: 20px;
-    width: 70%;
+    padding: 25px;
+    width: 90%;
+    max-width: 600px; /* Limitar el ancho máximo */
     border-radius: 8px;
     position: relative;
+    margin: 0; /* Quitar margen automático */
+    
+    /* Agregar animación */
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .close {
     position: absolute;
-    right: 10px;
-    top: 5px;
+    right: 15px;
+    top: 15px;
     font-size: 24px;
     cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: #000;
 }
 
 .nota-textarea {
@@ -307,6 +324,9 @@
     min-height: 300px;
     margin: 10px 0;
     padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
 }
 
 

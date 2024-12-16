@@ -1,41 +1,37 @@
 package com.licenciatura.controller;
 
+import com.licenciatura.model.Nota;
+import com.licenciatura.repository.NotaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 @Controller
 public class NotasController {
-    private static final String RUTA_NOTAS = System.getProperty("user.home") + "/notas_estudiantes.txt";
+    
+    @Autowired
+    private NotaRepository notaRepository;
 
     @GetMapping("/estudiantes/cargar-nota")
     @ResponseBody
     public String cargarNota() {
-        try {
-            if (new File(RUTA_NOTAS).exists()) {
-                return new String(Files.readAllBytes(Paths.get(RUTA_NOTAS)));
-            }
-            return "";
-        } catch (IOException e) {
-            return "";
-        }
+        Nota ultimaNota = notaRepository.findTopByOrderByIdDesc();
+        return ultimaNota != null ? ultimaNota.getContenido() : "";
     }
 
     @PostMapping("/estudiantes/guardar-nota")
     @ResponseBody
     public String guardarNota(@RequestParam String contenido) {
         try {
-            Files.write(Paths.get(RUTA_NOTAS), contenido.getBytes());
+            Nota nota = new Nota();
+            nota.setContenido(contenido);
+            notaRepository.save(nota);
             return "OK";
-        } catch (IOException e) {
-            return "Error";
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
         }
     }
 }
